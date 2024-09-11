@@ -1,0 +1,137 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+html {
+	font-size: 20px;
+	font-family: "IBM Plex Sans", sans-serif;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+code {
+	font-family: "IBM Plex Mono", monospace;
+}
+
+.lucide {
+	width: 1rem;
+	height: 1rem;
+}
+
+.pagina {
+	background-color: darkslategray;
+	color: rgb(26, 26, 26);
+}
+
+.pagina__principal {
+	height: 100dvh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.pagina__conteudo {
+	flex: 1;
+	padding: 1rem;
+	background-repeat: no-repeat;
+	background-position-x: 50%;
+	background-position-y: calc(50% - (2.1rem / 2));
+}
+
+.conteudo {
+	display: grid;
+	grid-template-rows: repeat(2, 100px);
+	grid-template-columns: repeat(2, 100px);
+	gap: 2rem;
+}
+
+.conteudo__item {
+	background-color: rgb(192, 192, 192);
+	border: 1px solid rgb(128, 128, 128);
+	box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+		rgb(255, 255, 255) 1px 1px 0px 0px inset, rgb(128, 128, 128) -1px -1px 0px 0px inset;
+}
+
+.item {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	text-align: center;
+}
+
+.item__icone {
+	flex: 1;
+	width: 40%;
+	height: 40%;
+}
+
+.item__nome {
+	position: absolute;
+	font-weight: 600;
+	text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+	top: 100%;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+
+.principal__rodape {
+	display: flex;
+	align-items: center;
+	height: 2.1rem;
+	justify-content: space-between;
+	padding: 0.25rem 0.5rem;
+	background-color: rgb(192, 192, 192);
+	box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+		rgb(255, 255, 255) 0px 1px 0px 0px inset;
+	border-top: 1px solid rgb(255, 255, 255);
+	border-bottom: 1px solid rgb(255, 255, 255);
+}
+
+.frequente .lucide,
+.fixo .lucide {
+	margin-right: 0.25rem;
+}
+
+.fixo__menu {
+	background-color: transparent;
+	font-size: 1rem;
+}
+
+.fixo__menu,
+.frequente__hora {
+	display: flex;
+	align-items: center;
+	height: 1.5rem;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	border: 1px solid rgb(128 128 128);
+}
+
+.fixo__menu:hover,
+.frequente__hora:hover {
+	background-color: rgb(224 224 224);
+}
+
+@media (min-width: 480px) {
+	.conteudo {
+		grid-template-columns: repeat(3, 100px);
+	}
+}
+
+@media (min-width: 800px) {
+	.conteudo {
+		grid-template-columns: repeat(4, 100px);
+	}
+}
