@@ -89,7 +89,7 @@ code {
 .principal__rodape {
 	display: flex;
 	align-items: center;
-	height: 2.1rem;
+	height: 2.6rem;
 	justify-content: space-between;
 	padding: 0.25rem 0.5rem;
 	background-color: rgb(192, 192, 192);
@@ -113,7 +113,7 @@ code {
 .frequente__hora {
 	display: flex;
 	align-items: center;
-	height: 1.5rem;
+	height: 2.1rem;
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
 	border: 1px solid rgb(128 128 128);

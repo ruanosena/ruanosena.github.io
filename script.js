@@ -19,9 +19,11 @@ function definirBackground(seletor, intervaloMinutos = 2) {
 
 	document.addEventListener("visibilitychange", () => {
 		if (document.hidden) {
+			// atualiza sempre que muda a aba
 			clearInterval(temporizador);
 			elt.style.backgroundImage = `url(https://robohash.org/${getAleatorio()})`;
 		} else {
+			// reinicia o temporizador
 			temporizador = setInterval(() => {
 				elt.style.backgroundImage = `url(https://robohash.org/${getAleatorio()})`;
 			}, intervaloMinutos);
@@ -36,12 +38,12 @@ function definirRelogio(seletor) {
 		const horario = hora.toLocaleTimeString().split(":");
 		return [`${horario[0]}:${horario[1]}`, Number(horario[2]), hora.toISOString()];
 	}
-	const horaElt = document.createElement("time");
-	let hora = getHoraLocal();
-
 	// define a hora inicialmente
+	let hora = getHoraLocal();
+	const horaElt = document.createElement("time");
 	horaElt.textContent = hora[0];
 	horaElt.dateTime = hora[2];
+
 	document.querySelector(seletor).appendChild(horaElt);
 	setTimeout(() => {
 		// aguarda a diferença de segundos até o próximo 00
