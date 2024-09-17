@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
 	definirBackground(".pagina__conteudo");
 	definirRelogio(".frequente__hora");
+	const fubah = document.createElement("div");
+	fubah.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?"
+	novaTela({ botaoSeletor: "#documentos", conteudo: fubah })
 });
 
 /**
@@ -57,4 +60,42 @@ function definirRelogio(seletor) {
 			horaElt.dateTime = hora[2];
 		}, 1000 * 60);
 	}, (60 - hora[1]) * 1000);
+}
+
+/**
+ * @typedef {Object} Tela
+ * @prop {string} botaoSeletor
+ * @prop {HTMLElement} conteudo
+ */
+
+/** @param {Tela} tela */
+function novaTela(tela) {
+	/** @type {HTMLElement} */
+	const botao = document.querySelector(tela.botaoSeletor);
+	// configura a janela do dialogo
+	const dialogo = document.createElement("dialog");
+	dialogo.classList.add("dialogo");
+
+	const cabecalho = document.createElement("header");
+	cabecalho.classList.add("cabecalho", "dialogo__cabecalho");
+	const titulo = document.createElement("div");
+	titulo.classList.add("cabecalho__titulo");
+	titulo.textContent = botao.textContent;
+	const fechar = document.createElement("span");
+	fechar.classList.add("cabecalho__fechar");
+	cabecalho.appendChild(titulo);
+	cabecalho.appendChild(fechar);
+	dialogo.appendChild(cabecalho);
+
+	tela.conteudo.classList.add("dialogo__conteudo");
+	dialogo.appendChild(tela.conteudo);
+
+	document.body.appendChild(dialogo);
+	// adiciona o ouvinte
+	botao.addEventListener("dblclick", () => {
+		dialogo.showModal();
+		fechar.addEventListener("click", () => {
+			dialogo.close();
+		}, { once: true })
+	});
 }
