@@ -1,3 +1,8 @@
 {
-  "nome": "Computador"
+  "nome": "Computador",
+  "$schema": "../data-info.schema.json",
+  "itens": 0,
+  "totalBytes": 4096,
+  "atualizadoEm": 1726711253149,
+  "criadoEm": 1726665404758.7769
 }

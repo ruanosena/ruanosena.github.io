@@ -7,6 +7,7 @@ const __public = path.join(__dirname, "..", "assets", "data");
 
 /**
  * @typedef {Object} Info
+ * @property {string} $schema
  * @property {string} nome
  * @property {number} itens
  * @property {number?} totalBytes
@@ -21,19 +22,30 @@ const __public = path.join(__dirname, "..", "assets", "data");
  * @returns {Info}
  */
 function getInfo(identificador) {
-	let caminho = path.join(__public, identificador);
+	const caminho = path.join(__public, identificador);
+	const infoCaminho = path.join(caminho, "info.json");
+	const jsonSchema = "data-info.schema.json";
 	const diretorioPropriedades = fs.statSync(caminho);
-	// TODO: adicionar schema para 'info.json'
 	/** @type {Info} */
-	const info = JSON.parse(fs.readFileSync(path.join(caminho, "info.json"), "utf-8"));
+	let info = {};
+	try {
+		info = JSON.parse(fs.readFileSync(infoCaminho, "utf-8"));
+	} catch (error) {
+		if (!fs.existsSync(path.join(__public, jsonSchema))) {
+			throw new Error(`O arquivo '${jsonSchema}' não foi encontrado.`);
+		}
+		fs.rmSync(path.join(caminho, ".gitkeep"), { force: true });
+	}
 
-	info.criadoEm = info.criadoEm || diretorioPropriedades.birthtimeMs;
+	info.$schema = info.$schema || path.join("..", jsonSchema);
+	info.nome = info.nome || capitalizarId(identificador);
 
-	const arquivos = fs.readdirSync(caminho).filter((arquivo) => arquivo !== "info.json");
-	// Não conta o '.size' do arquivo 'info.json', ao invés, leva em conta o diretorio.
+	const arquivos = fs.readdirSync(caminho).filter((arquivo) => ![".gitkeep", "info.json"].includes(arquivo));
+	info.itens = arquivos.length;
 	if (arquivos.length) {
 		const arquivosPropriedades = arquivos.map((arquivo) => fs.statSync(path.join(caminho, arquivo)));
 
+		// Não conta o '.size' do arquivo 'info.json', ao invés, leva em conta o diretório.
 		info.totalBytes = arquivosPropriedades.reduce((soma, { size }) => {
 			return soma + size;
 		}, diretorioPropriedades.size);
@@ -42,15 +54,30 @@ function getInfo(identificador) {
 			return mtimeMs > atualizadoMs ? mtimeMs : atualizadoMs;
 		}, diretorioPropriedades.mtimeMs);
 	} else {
-		if (info.itens /* possuia arquivos anteriormente */) info.atualizadoEm = Date.now();
-		else info.atualizadoEm = diretorioPropriedades.mtimeMs;
+		if (info.totalBytes !== diretorioPropriedades.size /* possuia arquivos anteriormente */) {
+			info.totalBytes = diretorioPropriedades.size;
 
-		info.totalBytes = diretorioPropriedades.size;
+			info.atualizadoEm = Date.now();
+		} else if (!info.atualizadoEm /* 1a checagem */) info.atualizadoEm = diretorioPropriedades.mtimeMs;
 	}
-
-	info.itens = arquivos.length;
+	info.criadoEm = info.criadoEm || diretorioPropriedades.birthtimeMs;
 
 	return info;
 }
 
-console.log(getInfo("lixeira"), getInfo("meu_computador"));
+/** @param {Id} id */
+function capitalizarId(id) {
+	const idArray = id.split("_");
+	return idArray.map((palavra) => `${palavra[0].toUpperCase()}${palavra.slice(1)}`).join(" ");
+}
+
+/** @param {...Id} diretorios */
+function checarInfoDeDiretorios(...diretorios) {
+	for (let dir of diretorios) {
+		fs.writeFileSync(path.join(__public, dir, "info.json"), JSON.stringify(getInfo(dir), null, 2), {
+			encoding: "utf-8",
+		});
+	}
+}
+
+checarInfoDeDiretorios("lixeira", "meu_computador", "meus_documentos", "internet_explorer");

@@ -1,6 +1,8 @@
 {
+  "$schema": "../data-info.schema.json",
   "nome": "Lixeira",
-  "totalBytes": null,
-  "atualizadoEm": null,
-  "criadoEm": null
+  "itens": 1,
+  "totalBytes": 4129,
+  "atualizadoEm": 1726702828140.6262,
+  "criadoEm": 1726665396195.57
 }

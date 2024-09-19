@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "title": "Root Schema",
+  "type": "object",
+  "default": {},
+  "required": [
+    "$schema",
+    "nome"
+  ],
+  "properties": {
+    "$schema": {
+      "title": "The $schema Schema",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "../data-info.schema.json"
+      ]
+    },
+    "nome": {
+      "title": "The nome Schema",
+      "type": "string",
+      "default": "",
+      "examples": [
+        "Lixeira"
+      ]
+    },
+    "itens": {
+      "title": "The itens Schema",
+      "type": [
+        "integer",
+        "null"
+      ],
+      "default": 0,
+      "examples": [
+        0
+      ]
+    },
+    "totalBytes": {
+      "title": "The totalBytes Schema",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "examples": [
+        null
+      ]
+    },
+    "atualizadoEm": {
+      "title": "The atualizadoEm Schema",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "examples": [
+        null
+      ]
+    },
+    "criadoEm": {
+      "title": "The criadoEm Schema",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": null,
+      "examples": [
+        null
+      ]
+    }
+  },
+  "examples": [
+    {
+      "$schema": "../data-info.schema.json",
+      "nome": "Lixeira",
+      "itens": 0,
+      "totalBytes": null,
+      "atualizadoEm": null,
+      "criadoEm": null
+    }
+  ]
+}
