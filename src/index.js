@@ -5,6 +5,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const __public = path.join(__dirname, "..", "assets", "data");
 
+run();
+
 /**
  * @typedef {Object} Info
  * @property {string} $schema
@@ -19,9 +21,10 @@ const __public = path.join(__dirname, "..", "assets", "data");
 
 /**
  * @param {Id} identificador
+ * @param {boolean?} checarArquivos
  * @returns {Info}
  */
-function getInfo(identificador) {
+function getInfo(identificador, checarArquivos = true) {
 	const caminho = path.join(__public, identificador);
 	const infoCaminho = path.join(caminho, "info.json");
 	const jsonSchema = "data-info.schema.json";
@@ -30,6 +33,7 @@ function getInfo(identificador) {
 	let info = {};
 	try {
 		info = JSON.parse(fs.readFileSync(infoCaminho, "utf-8"));
+		if (!checarArquivos) return info;
 	} catch (error) {
 		if (!fs.existsSync(path.join(__public, jsonSchema))) {
 			throw new Error(`O arquivo '${jsonSchema}' não foi encontrado.`);
@@ -73,11 +77,37 @@ function capitalizarId(id) {
 
 /** @param {...Id} diretorios */
 function checarInfoDeDiretorios(...diretorios) {
+	let meuComputador = "";
+	if (diretorios.includes("meu_computador")) {
+		diretorios = diretorios.filter((dir) => {
+			if (dir !== "meu_computador") return true;
+			else meuComputador = dir;
+		});
+	}
+	let sumBytes = 0;
 	for (let dir of diretorios) {
-		fs.writeFileSync(path.join(__public, dir, "info.json"), JSON.stringify(getInfo(dir), null, 2), {
+		const info = getInfo(dir);
+		sumBytes += info.totalBytes;
+		fs.writeFileSync(path.join(__public, dir, "info.json"), JSON.stringify(info, null, 2), { encoding: "utf-8" });
+	}
+	if (meuComputador) {
+		const meuComputadorInfo = getInfo("meu_computador");
+		meuComputadorInfo.totalBytes += sumBytes;
+
+		fs.writeFileSync(path.join(__public, meuComputador, "info.json"), JSON.stringify(meuComputadorInfo, null, 2), {
 			encoding: "utf-8",
 		});
 	}
 }
 
-checarInfoDeDiretorios("lixeira", "meu_computador", "meus_documentos", "internet_explorer");
+/** @param {"checar" | "build"} [param=process.argv[2]] primeiro argumento do script npm */
+function run(param = process.argv[2]) {
+	param = param?.toLowerCase() || "";
+	if (param === "checar") {
+		checarInfoDeDiretorios("lixeira", "meu_computador", "meus_documentos", "internet_explorer");
+	} else if (param === "build") {
+		console.log("B U I L D");
+	} else {
+		console.log(getInfo("meu_computador", null));
+	}
+}
