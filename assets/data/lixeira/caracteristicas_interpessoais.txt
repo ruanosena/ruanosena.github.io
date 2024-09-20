@@ -1,0 +1,5 @@
+1. compromisso e iniciativa - trabalhar pelo tempo determinado anteriormente mesmo já tendo alcançado a meta inicial.
+2. disciplina - criar um cronograma para realizar as tarefas dentro dos prazos, reuniões, revisão de código e tudo mais
+3. comunicação e trabalho em equipe - ser claro e profissional ao se comunicar, de forma objetiva com respeito, educação e profissionalismo
+4. autoaprendizagem - reservar uma hora para aprender e desenvolver competências durante o dia, para aprender algo novo relacionado ao job
+5. gestão de tempo - organizar data de entregas, estimar o tempo para fazer uma implementação 

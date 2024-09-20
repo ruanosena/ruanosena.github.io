@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import runLixeira from "./lib/checarLixeira.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const __public = path.join(__dirname, "..", "assets", "data");
@@ -103,10 +104,12 @@ function checarInfoDeDiretorios(...diretorios) {
 /** @param {"checar" | "build"} [param=process.argv[2]] primeiro argumento do script npm */
 function run(param = process.argv[2]) {
 	param = param?.toLowerCase() || "";
-	if (param === "checar") {
-		checarInfoDeDiretorios("lixeira", "meu_computador", "meus_documentos", "internet_explorer");
-	} else if (param === "build") {
+	if (param === "build") {
+		const args = Object.fromEntries(process.argv.slice(3).map((arg) => arg.split("=")));
+		runLixeira(args["lixeira"]);
 		console.log("B U I L D");
+	} else if (param === "checar") {
+		checarInfoDeDiretorios("lixeira", "meu_computador", "meus_documentos", "internet_explorer");
 	} else {
 		console.log(getInfo("meu_computador", null));
 	}
