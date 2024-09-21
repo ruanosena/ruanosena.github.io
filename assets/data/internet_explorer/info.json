@@ -1,8 +1,8 @@
 {
   "$schema": "../data-info.schema.json",
   "nome": "Internet Explorer",
-  "itens": 0,
-  "totalBytes": 4096,
-  "atualizadoEm": 1726711253150,
+  "itens": 1,
+  "totalBytes": 4944,
+  "atualizadoEm": 1726932287528.1597,
   "criadoEm": 1726665484227.4165
 }
