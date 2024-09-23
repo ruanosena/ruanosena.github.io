@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import runLixeira from "./lib/checarLixeira.js";
 import runExplorer from "./lib/checarExplorer.js";
+import runDocumentos from "./lib/checarDocumentos.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const __public = path.join(__dirname, "..", "assets", "data");
@@ -107,9 +108,10 @@ function run(param = process.argv[2]) {
 	param = param?.toLowerCase() || "";
 	if (param === "build") {
 		const args = Object.fromEntries(process.argv.slice(3).map((arg) => arg.split("=")));
+		console.log("B U I L D");
 		runLixeira(args["lixeira"]);
 		runExplorer(args["usuario"], args["ghpages"]);
-		console.log("B U I L D");
+		runDocumentos(args["documentos"]);
 	} else if (param === "checar") {
 		checarInfoDeDiretorios("lixeira", "meu_computador", "meus_documentos", "internet_explorer");
 	} else {
