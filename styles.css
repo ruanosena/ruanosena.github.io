@@ -45,7 +45,7 @@ code {
 	padding: 1rem;
 	background-repeat: no-repeat;
 	background-position-x: 50%;
-	background-position-y: calc(50% - (2.1rem / 2));
+	background-position-y: calc(50% - 2.6rem / 2);
 }
 
 .conteudo {
@@ -100,6 +100,10 @@ code {
 	border-bottom: 1px solid rgb(255, 255, 255);
 }
 
+.programas {
+	flex: 1;
+}
+
 .frequente .lucide,
 .fixo .lucide {
 	margin-right: 0.25rem;
@@ -126,20 +130,42 @@ code {
 }
 
 .dialogo {
+	width: 100%;
+	min-width: 320px;
+	max-width: 60rem;
+	height: calc(100vh - 2.6rem);
+	row-gap: 1rem;
+	padding: 0;
+	background: rgb(192, 192, 192);
+	border: 3px solid rgb(128, 128, 128);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.dialogo[open] {
+	position: absolute;
+	left: 0;
+	top: 0;
 	display: flex;
 	flex-direction: column;
-	max-width: 40rem;
-	row-gap: 1rem;
-	margin: auto;
+}
+
+.dialogo:focus-visible {
+	outline: none;
+}
+
+.dialogo:hover {
+	background: rgb(224, 224, 224);
 }
 
 .dialogo__cabecalho {
 	height: 2.5rem;
+	padding-left: 1rem;
 }
 
 .cabecalho {
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 	justify-content: space-between;
 }
 
@@ -149,16 +175,41 @@ code {
 	font-weight: 600;
 }
 
-.cabecalho__fechar {
-	background: url("assets/images/square-x.svg");
-	background-size: cover;
-	width: 2.25rem;
-	height: 2.25rem;
-	padding: 1px;
+.cabecalho__controles {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.controles__fechar,
+.controles__minimizar {
+	width: 42px;
+	height: 42px;
+	overflow: hidden;
+}
+
+.controles__fechar::after {
+	content: "\22A0";
+}
+
+.controles__minimizar::after {
+	content: "\229F";
+}
+
+.controles__fechar::after,
+.controles__minimizar::after {
+	display: inline-block;
+	width: inherit;
+	line-height: 40px;
+	font-size: 54px;
+	text-indent: -1.5px;
 }
 
 .dialogo__conteudo {
 	flex: 1;
+	padding-left: 1rem;
+	padding-right: 1rem;
 }
 
 @media (min-width: 480px) {

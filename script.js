@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	definirBackground(".pagina__conteudo");
 	definirRelogio(".frequente__hora");
 	const fubah = document.createElement("div");
-	fubah.textContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?"
-	novaTela({ botaoSeletor: "#documentos", conteudo: fubah })
+	fubah.textContent =
+		"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
+	novaTela({ botaoSeletor: "#documentos", conteudo: fubah });
 });
 
 /**
@@ -81,21 +82,39 @@ function novaTela(tela) {
 	const titulo = document.createElement("div");
 	titulo.classList.add("cabecalho__titulo");
 	titulo.textContent = botao.textContent;
-	const fechar = document.createElement("span");
-	fechar.classList.add("cabecalho__fechar");
 	cabecalho.appendChild(titulo);
-	cabecalho.appendChild(fechar);
+
+	const cabecalhoControles = document.createElement("div");
+	cabecalhoControles.classList.add("controles", "cabecalho__controles");
+	const minimizar = document.createElement("span");
+	minimizar.classList.add("controles__minimizar");
+	const fechar = document.createElement("span");
+	fechar.classList.add("controles__fechar");
+	cabecalhoControles.appendChild(minimizar);
+	cabecalhoControles.appendChild(fechar);
+	cabecalho.appendChild(cabecalhoControles);
+
 	dialogo.appendChild(cabecalho);
 
 	tela.conteudo.classList.add("dialogo__conteudo");
 	dialogo.appendChild(tela.conteudo);
-
 	document.body.appendChild(dialogo);
-	// adiciona o ouvinte
+	// const programas = document.querySelector(".programas");
+
 	botao.addEventListener("dblclick", () => {
-		dialogo.showModal();
+		// adiciona o ouvinte de abrir a caixa do dialogo
+		dialogo.show();
+
+		document.addEventListener("click", (evento) => {
+			// TODO: adiciona o ouvinte de minimizar
+			if (!dialogo.contains(evento.target)) {
+				dialogo.close();
+			}
+		});
+
 		fechar.addEventListener("click", () => {
 			dialogo.close();
-		}, { once: true })
+			console.log("ok");
+		});
 	});
 }
