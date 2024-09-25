@@ -72,6 +72,10 @@ code {
 	text-align: center;
 }
 
+.item:hover > .item__nome {
+	background-color: rgba(128, 128, 128, 0.5);
+}
+
 .item__icone {
 	flex: 1;
 	width: 40%;
@@ -85,6 +89,9 @@ code {
 	top: 100%;
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
+	user-select: none;
+	cursor: default;
+	border-radius: 0.5rem;
 }
 
 .principal__rodape {
@@ -101,7 +108,25 @@ code {
 }
 
 .programas {
+	display: inline-flex;
 	flex: 1;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+}
+
+.programas__item {
+	/* flex: 1; */
+	white-space: nowrap;
+	max-width: 10rem;
+}
+
+.caixa {
+	font-size: 0.8rem;
+	column-gap: 0.2rem;
+}
+
+.caixa_ativo {
+	background-color: rgb(224 224 224);
 }
 
 .frequente .lucide,
@@ -115,7 +140,8 @@ code {
 }
 
 .fixo__menu,
-.frequente__hora {
+.frequente__hora,
+.programas__item {
 	display: flex;
 	align-items: center;
 	height: 2.1rem;
@@ -187,6 +213,7 @@ code {
 	width: 42px;
 	height: 42px;
 	overflow: hidden;
+	cursor: pointer;
 }
 
 .controles__fechar::after {

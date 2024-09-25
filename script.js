@@ -99,22 +99,72 @@ function novaTela(tela) {
 	tela.conteudo.classList.add("dialogo__conteudo");
 	dialogo.appendChild(tela.conteudo);
 	document.body.appendChild(dialogo);
-	// const programas = document.querySelector(".programas");
+
+	const caixa = novaCaixaDePrograma(botao.querySelector(".item__icone"));
+	let jaAdicionouCaixa = false;
 
 	botao.addEventListener("dblclick", () => {
-		// adiciona o ouvinte de abrir a caixa do dialogo
+		if (!jaAdicionouCaixa || caixa.style.getPropertyValue("display") === "none") {
+			const programas = document.querySelector(".programas");
+			programas.appendChild(caixa);
+			caixa.style.removeProperty("display");
+			jaAdicionouCaixa = true;
+		}
+
 		dialogo.show();
-
-		document.addEventListener("click", (evento) => {
-			// TODO: adiciona o ouvinte de minimizar
-			if (!dialogo.contains(evento.target)) {
-				dialogo.close();
-			}
-		});
-
-		fechar.addEventListener("click", () => {
-			dialogo.close();
-			console.log("ok");
-		});
+		// MAXIMIZADO pelo clique duplo (não é criado novo dialogo, janela)
+		caixa.classList.add("caixa_ativo");
 	});
+
+	document.addEventListener("click", (evento) => {
+		// MINIMIZAR, sem ser no botão
+		const barraDoRodape = document.querySelector(".principal__rodape");
+		if (dialogo.open) {
+			if (!dialogo.contains(evento.target)) {
+				if (barraDoRodape.contains(evento.target)) {
+					// clique na barra do rodapé. Só é minimizado se foi na própria caixa
+					if (caixa.contains(evento.target)) {
+						dialogo.close();
+						caixa.classList.remove("caixa_ativo");
+					}
+				} else {
+					dialogo.close();
+					caixa.classList.remove("caixa_ativo");
+				}
+			}
+		} else {
+			// MAXIMIZAR pela caixa
+			if (caixa.contains(evento.target)) {
+				dialogo.show();
+				caixa.classList.add("caixa_ativo");
+			}
+		}
+	});
+
+	// MINIMIZAR, no botão
+	minimizar.addEventListener("click", () => {
+		dialogo.close();
+		caixa.classList.remove("caixa_ativo");
+	});
+	// FECHAR, no botão
+	fechar.addEventListener("click", () => {
+		dialogo.close();
+		caixa.style.setProperty("display", "none");
+	});
+}
+
+/**
+ * @param {Element} icone
+ * @returns {HTMLDivElement} caixa
+ */
+function novaCaixaDePrograma(icone) {
+	const caixa = document.createElement("div");
+	caixa.classList.add("caixa", "programas__item", "caixa_ativo"); // por padrão é ativo quando criado
+	/** @type {Element} */
+	const caixaIcone = icone.cloneNode(true);
+	caixaIcone.classList.remove("item__icone");
+	caixaIcone.classList.add("caixa__icone");
+	caixa.appendChild(caixaIcone);
+
+	return caixa;
 }
