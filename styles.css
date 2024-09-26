@@ -268,11 +268,48 @@ code {
 	max-width: 16rem;
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
+	text-align: center;
 }
 
 .dialogo__conteudo + .dialogo__info {
 	border-left: 1px solid rgb(26, 26, 26);
 	max-width: 12rem;
+}
+
+.dialogo__info h2 {
+	font-size: 1.25rem;
+	font-weight: 500;
+}
+
+.dialogo__info h3 {
+	font-size: 0.9rem;
+	font-weight: 400;
+}
+
+.info__metadados {
+	background: rgb(224, 224, 224);
+	padding: 0.25rem;
+	border-radius: 0.3rem;
+}
+
+.dialogo:hover .info__metadados {
+	background: rgb(192, 192, 192);
+}
+
+.info__metadados div {
+	font-size: 0.9rem;
+	color: rgb(26, 26, 26);
+}
+
+.info__metadados div + div {
+	border-top: 1px solid rgb(26, 26, 26);
+}
+
+.info__label {
+	display: block;
+	text-align: left;
+	color: rgb(128, 128, 128);
+	font-size: 0.8rem;
 }
 
 @media (min-width: 480px) {

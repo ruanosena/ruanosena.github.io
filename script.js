@@ -8,35 +8,32 @@
 /** @type {Diretorios} */
 const DIRETORIOS = {
 	lixeira: async () => {
-		const caminho = "/assets/data/lixeira/";
-		const dados = await fetch(caminho + "info.json").then((resposta) => resposta.json());
-		const info = document.createElement("div");
-		info.innerHTML = JSON.stringify(dados);
+		const caminho = "lixeira";
+		const dados = await fetch(`/assets/data/${caminho}/info.json`).then((resposta) => resposta.json());
+		const info = criarInfo(dados, caminho);
 		const conteudo = document.createElement("div");
 		conteudo.textContent =
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
 		return [conteudo, info];
 	},
 	computador: async () => {
-		const caminho = "/assets/data/lixeira/";
-		const dados = await fetch(caminho + "info.json").then((resposta) => resposta.json());
-		const info = document.createElement("div");
-		info.innerHTML = JSON.stringify(dados);
+		const caminho = "meu_computador";
+		const dados = await fetch(`/assets/data/${caminho}/info.json`).then((resposta) => resposta.json());
+		const info = criarInfo(dados, caminho);
 		const conteudo = null;
 		return [conteudo, info];
 	},
 	documentos: async () => {
-		const caminho = "/assets/data/lixeira/";
-		const dados = await fetch(caminho + "info.json").then((resposta) => resposta.json());
-		const info = document.createElement("div");
-		info.innerHTML = JSON.stringify(dados);
+		const caminho = "meus_documentos";
+		const dados = await fetch(`/assets/data/${caminho}/info.json`).then((resposta) => resposta.json());
+		const info = criarInfo(dados, caminho);
 		const conteudo = document.createElement("div");
 		conteudo.textContent =
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
 		return [conteudo, info];
 	},
 	navegador: async () => {
-		const caminho = "/assets/data/lixeira/";
+		const caminho = "internet_explorer";
 		const info = null;
 		const conteudo = document.createElement("div");
 		conteudo.textContent =
@@ -300,4 +297,55 @@ async function definirTelas(telas) {
 	for (const [id, criarCorpoDeTela] of Object.entries(telas)) {
 		novaTela({ botaoSeletor: "#" + id, corpo: await criarCorpoDeTela() });
 	}
+}
+
+/**
+ * @param {import("./src/index").Info} info
+ * @param {string} caminho
+ */
+function criarInfo(info, caminho) {
+	const container = document.createElement("div");
+	const titulo = document.createElement("code");
+	titulo.textContent = caminho;
+	container.appendChild(titulo);
+	const subTitulo = document.createElement("h3");
+	subTitulo.textContent = `${info.itens} ${info.itens !== 1 ? "itens" : "item"}, totalizando ${bytesEmKB(
+		info.totalBytes
+	)} kB`;
+	container.appendChild(subTitulo);
+
+	const metadados = document.createElement("div");
+	metadados.classList.add("info__metadados");
+
+	const modificado = document.createElement("div");
+	const modificadoLabel = document.createElement("span");
+	modificadoLabel.textContent = "Modificado";
+	modificadoLabel.classList.add("info__label");
+	modificado.appendChild(modificadoLabel);
+	modificado.innerHTML += new Date(info.atualizadoEm).toLocaleString();
+	metadados.appendChild(modificado);
+
+	const criado = document.createElement("div");
+	const criadoLabel = document.createElement("span");
+	criadoLabel.classList.add("info__label");
+	criadoLabel.textContent = "Criado";
+	criado.appendChild(criadoLabel);
+	criado.innerHTML += new Date(info.atualizadoEm).toLocaleString();
+	metadados.appendChild(criado);
+
+	container.appendChild(metadados);
+
+	return container;
+}
+
+/** @param {number} bytes  */
+function bytesEmKB(bytes) {
+	const kbFormatador = new Intl.NumberFormat("pt-BR", {
+		style: "unit",
+		unit: "byte",
+		unitDisplay: "short",
+		maximumFractionDigits: 1,
+	});
+	const bytesFormatado = kbFormatador.format(bytes);
+	return bytesFormatado.slice(0, bytesFormatado.indexOf("."));
 }
