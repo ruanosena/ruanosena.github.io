@@ -174,7 +174,7 @@ function novaTela({ botaoSeletor, corpo }) {
 
 	const barraDoRodape = document.querySelector(".principal__rodape");
 
-	document.addEventListener("click", (evento) => {
+	document.body.addEventListener("click", (evento) => {
 		// MINIMIZAR tudo
 		if (dialogo.open) {
 			if (!dialogo.contains(evento.target)) {
@@ -379,7 +379,14 @@ function definirMenu() {
 	/** @type {HTMLButtonElement} */
 	const botao = document.querySelector(".fixo__botao");
 	const menu = document.querySelector(".fixo__menu");
-	botao.addEventListener("click", () => {
+	botao.addEventListener("click", (evento) => {
+		evento.stopPropagation();
 		botao.dataset["aberto"] = !menu.toggleAttribute("hidden");
+	});
+
+	document.body.addEventListener("click", (evento) => {
+		if (botao.dataset["aberto"] == "true" && !botao.contains(evento.target)) {
+			botao.dataset["aberto"] = !menu.toggleAttribute("hidden");
+		}
 	});
 }

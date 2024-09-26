@@ -134,6 +134,7 @@ a.conteudo__item:focus-visible {
 	display: flex;
 	justify-content: flex-start;
 	column-gap: 0.5rem;
+	overflow-x: scroll;
 }
 
 .programas {
@@ -316,7 +317,6 @@ a.conteudo__item:focus-visible {
 }
 
 .dialogo__info {
-	display: none;
 	min-width: 12rem;
 	max-width: 16rem;
 	padding-top: 0.5rem;
@@ -325,6 +325,7 @@ a.conteudo__item:focus-visible {
 }
 
 .dialogo__conteudo + .dialogo__info {
+	display: none;
 	border-left: 1px solid rgb(26, 26, 26);
 	max-width: 12rem;
 }
@@ -386,7 +387,7 @@ a.conteudo__item:focus-visible {
 		font-size: 1.2rem;
 	}
 
-	.dialogo__info {
+	.dialogo__conteudo + .dialogo__info {
 		display: block;
 	}
 
