@@ -1,35 +1,47 @@
 /** @typedef {string} SeletorId */
 /**
- * @callback CriarConteudo
- * @returns {HTMLElement}
+ * @callback CriarCorpoDeTela
+ * @returns {Promise<[HTMLElement | null, HTMLElement | null]>}
  */
-/** @typedef {Object<SeletorId, CriarConteudo>} Diretorios */
+/** @typedef {Object<SeletorId, CriarCorpoDeTela>} Diretorios */
 
 /** @type {Diretorios} */
 const DIRETORIOS = {
-	lixeira: () => {
-		const elt = document.createElement("div");
-		elt.textContent =
+	lixeira: async () => {
+		const caminho = "/assets/data/lixeira/";
+		const dados = await fetch(caminho + "info.json").then((resposta) => resposta.json());
+		const info = document.createElement("div");
+		info.innerHTML = JSON.stringify(dados);
+		const conteudo = document.createElement("div");
+		conteudo.textContent =
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
-		return elt;
+		return [conteudo, info];
 	},
-	computador: () => {
-		const elt = document.createElement("div");
-		elt.textContent =
-			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
-		return elt;
+	computador: async () => {
+		const caminho = "/assets/data/lixeira/";
+		const dados = await fetch(caminho + "info.json").then((resposta) => resposta.json());
+		const info = document.createElement("div");
+		info.innerHTML = JSON.stringify(dados);
+		const conteudo = null;
+		return [conteudo, info];
 	},
-	documentos: () => {
-		const elt = document.createElement("div");
-		elt.textContent =
+	documentos: async () => {
+		const caminho = "/assets/data/lixeira/";
+		const dados = await fetch(caminho + "info.json").then((resposta) => resposta.json());
+		const info = document.createElement("div");
+		info.innerHTML = JSON.stringify(dados);
+		const conteudo = document.createElement("div");
+		conteudo.textContent =
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
-		return elt;
+		return [conteudo, info];
 	},
-	navegador: () => {
-		const elt = document.createElement("div");
-		elt.textContent =
+	navegador: async () => {
+		const caminho = "/assets/data/lixeira/";
+		const info = null;
+		const conteudo = document.createElement("div");
+		conteudo.textContent =
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
-		return elt;
+		return Promise.resolve([conteudo, info]);
 	},
 };
 
@@ -98,11 +110,11 @@ function definirRelogio(seletor) {
 /**
  * @typedef {Object} Tela
  * @prop {string} botaoSeletor
- * @prop {HTMLElement} conteudo
+ * @prop {[HTMLElement, HTMLElement]} corpo
  */
 
 /** @param {Tela} tela */
-function novaTela({ botaoSeletor, conteudo }) {
+function novaTela({ botaoSeletor, corpo }) {
 	/** @type {HTMLElement} */
 	const botao = document.querySelector(botaoSeletor);
 	// configura a janela do dialogo
@@ -127,9 +139,24 @@ function novaTela({ botaoSeletor, conteudo }) {
 	cabecalho.appendChild(cabecalhoControles);
 
 	dialogo.appendChild(cabecalho);
+	const corpoElt = document.createElement("div");
+	corpoElt.classList.add("dialogo__corpo");
 
-	conteudo.classList.add("dialogo__conteudo");
-	dialogo.appendChild(conteudo);
+	const [conteudo, info] = corpo;
+	if (conteudo) {
+		conteudo.classList.add("conteudo", "dialogo__conteudo");
+		if (info) conteudo.style.paddingRight = "0.5rem";
+		corpoElt.appendChild(conteudo);
+	} else {
+		dialogo.style.width = "max-content";
+	}
+	if (info) {
+		info.classList.add("dialogo__info");
+		if (conteudo) info.style.paddingLeft = "0.5rem";
+		corpoElt.appendChild(info);
+	}
+
+	dialogo.appendChild(corpoElt);
 	document.body.appendChild(dialogo);
 
 	const caixa = novaCaixaDePrograma(botao.querySelector(".item__icone"));
@@ -160,6 +187,15 @@ function novaTela({ botaoSeletor, conteudo }) {
 					dialogo.close();
 					caixa.classList.remove("caixa_ativo");
 					empilharTelaAberta(null);
+				}
+			} else {
+				if (!telaEstaPorCima(dialogo)) {
+					// sobrepor
+					dialogo.show();
+					// remove outra caixa ativa
+					document.querySelector(".caixa_ativo")?.classList.remove("caixa_ativo");
+					caixa.classList.add("caixa_ativo");
+					empilharTelaAberta([dialogo, caixa]);
 				}
 			}
 		}
@@ -212,19 +248,20 @@ function empilharTelaAberta(conjunto, z = 1) {
 		telasAbertas.length = 0;
 		return;
 	}
-	const [tela, caixa] = conjunto;
+	const [tela] = conjunto;
 	if (z === 1) {
-		telasAbertas = telasAbertas.reduce((telas, [telaAberta, caixaAtual], index) => {
+		let zIndex = 0;
+		telasAbertas = telasAbertas.reduce((telas, [telaAberta, caixaAtual]) => {
 			// reordena zIndex
 			if (!telaAberta.isEqualNode(tela)) {
-				telaAberta.style.setProperty("z-index", index + 1);
+				telaAberta.style.setProperty("z-index", zIndex++);
 				telas.push([telaAberta, caixaAtual]);
 			}
 			return telas;
 		}, []);
 
-		tela.style.setProperty("z-index", telasAbertas.length + 1);
-		telasAbertas.push([tela, caixa]);
+		tela.style.setProperty("z-index", zIndex);
+		telasAbertas.push(conjunto);
 	} else {
 		telasAbertas = telasAbertas.reduce((telas, [telaAberta, caixaAtual]) => {
 			if (!telaAberta.isEqualNode(tela)) telas.push([telaAberta, caixaAtual]);
@@ -259,8 +296,8 @@ function novaCaixaDePrograma(icone) {
 }
 
 /** @param {Diretorios} telas  */
-function definirTelas(telas) {
-	for (const [id, criarConteudo] of Object.entries(telas)) {
-		novaTela({ botaoSeletor: "#" + id, conteudo: criarConteudo() });
+async function definirTelas(telas) {
+	for (const [id, criarCorpoDeTela] of Object.entries(telas)) {
+		novaTela({ botaoSeletor: "#" + id, corpo: await criarCorpoDeTela() });
 	}
 }

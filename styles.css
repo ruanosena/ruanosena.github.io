@@ -167,12 +167,13 @@ code {
 	min-width: 320px;
 	max-width: 60rem;
 	height: calc(100vh - 2.6rem);
-	row-gap: 1rem;
+	row-gap: 0.5rem;
 	padding: 0;
 	background: rgb(192, 192, 192);
 	border: 3px solid rgb(128, 128, 128);
 	margin-left: auto;
 	margin-right: auto;
+	overflow: hidden;
 }
 
 .dialogo[open] {
@@ -193,7 +194,7 @@ code {
 
 .dialogo__cabecalho {
 	height: 2.5rem;
-	padding-left: 1rem;
+	padding-left: 0.5rem;
 }
 
 .cabecalho {
@@ -240,10 +241,38 @@ code {
 	text-indent: -1.5px;
 }
 
-.dialogo__conteudo {
+.dialogo__corpo {
+	display: flex;
+	height: 100%;
+	overflow: hidden;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	border-top: 1px solid rgb(26, 26, 26);
+}
+
+.dialogo__conteudo,
+.dialogo__info {
 	flex: 1;
-	padding-left: 1rem;
-	padding-right: 1rem;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.dialogo__conteudo {
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+
+.dialogo__info {
+	display: none;
+	min-width: 6rem;
+	max-width: 16rem;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+
+.dialogo__conteudo + .dialogo__info {
+	border-left: 1px solid rgb(26, 26, 26);
+	max-width: 12rem;
 }
 
 @media (min-width: 480px) {
@@ -264,5 +293,32 @@ code {
 
 	.cabecalho__titulo {
 		font-size: 1.2rem;
+	}
+
+	.dialogo__info {
+		display: block;
+	}
+}
+
+@media (min-width: 1024px) {
+	.dialogo {
+		row-gap: 1rem;
+	}
+
+	.dialogo__cabecalho {
+		padding-left: 1rem;
+	}
+
+	.dialogo__corpo {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+
+	.dialogo__conteudo {
+		padding-bottom: 1rem;
+	}
+
+	.dialogo__info {
+		padding-bottom: 1rem;
 	}
 }
