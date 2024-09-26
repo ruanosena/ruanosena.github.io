@@ -1,10 +1,42 @@
+/** @typedef {string} SeletorId */
+/**
+ * @callback CriarConteudo
+ * @returns {HTMLElement}
+ */
+/** @typedef {Object<SeletorId, CriarConteudo>} Diretorios */
+
+/** @type {Diretorios} */
+const DIRETORIOS = {
+	lixeira: () => {
+		const elt = document.createElement("div");
+		elt.textContent =
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
+		return elt;
+	},
+	computador: () => {
+		const elt = document.createElement("div");
+		elt.textContent =
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
+		return elt;
+	},
+	documentos: () => {
+		const elt = document.createElement("div");
+		elt.textContent =
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
+		return elt;
+	},
+	navegador: () => {
+		const elt = document.createElement("div");
+		elt.textContent =
+			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
+		return elt;
+	},
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 	definirBackground(".pagina__conteudo");
 	definirRelogio(".frequente__hora");
-	const fubah = document.createElement("div");
-	fubah.textContent =
-		"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
-	novaTela({ botaoSeletor: "#documentos", conteudo: fubah });
+	definirTelas(DIRETORIOS);
 });
 
 /**
@@ -70,9 +102,9 @@ function definirRelogio(seletor) {
  */
 
 /** @param {Tela} tela */
-function novaTela(tela) {
+function novaTela({ botaoSeletor, conteudo }) {
 	/** @type {HTMLElement} */
-	const botao = document.querySelector(tela.botaoSeletor);
+	const botao = document.querySelector(botaoSeletor);
 	// configura a janela do dialogo
 	const dialogo = document.createElement("dialog");
 	dialogo.classList.add("dialogo");
@@ -96,61 +128,118 @@ function novaTela(tela) {
 
 	dialogo.appendChild(cabecalho);
 
-	tela.conteudo.classList.add("dialogo__conteudo");
-	dialogo.appendChild(tela.conteudo);
+	conteudo.classList.add("dialogo__conteudo");
+	dialogo.appendChild(conteudo);
 	document.body.appendChild(dialogo);
 
 	const caixa = novaCaixaDePrograma(botao.querySelector(".item__icone"));
 	let jaAdicionouCaixa = false;
 
+	const programas = document.querySelector(".programas");
+
 	botao.addEventListener("dblclick", () => {
 		if (!jaAdicionouCaixa || caixa.style.getPropertyValue("display") === "none") {
-			const programas = document.querySelector(".programas");
 			programas.appendChild(caixa);
 			caixa.style.removeProperty("display");
 			jaAdicionouCaixa = true;
 		}
 
 		dialogo.show();
-		// MAXIMIZADO pelo clique duplo (não é criado novo dialogo, janela)
-		caixa.classList.add("caixa_ativo");
+		caixa.classList.add("caixa_ativo"); // quando criado ou MAXIMIZADO
+		empilharTelaAberta([dialogo, caixa]);
 	});
 
+	const barraDoRodape = document.querySelector(".principal__rodape");
+
 	document.addEventListener("click", (evento) => {
-		// MINIMIZAR, sem ser no botão
-		const barraDoRodape = document.querySelector(".principal__rodape");
+		// MINIMIZAR tudo
 		if (dialogo.open) {
 			if (!dialogo.contains(evento.target)) {
-				if (barraDoRodape.contains(evento.target)) {
-					// clique na barra do rodapé. Só é minimizado se foi na própria caixa
-					if (caixa.contains(evento.target)) {
-						dialogo.close();
-						caixa.classList.remove("caixa_ativo");
-					}
-				} else {
+				if (!barraDoRodape.contains(evento.target)) {
+					// clique no conteudo da página
 					dialogo.close();
 					caixa.classList.remove("caixa_ativo");
+					empilharTelaAberta(null);
 				}
-			}
-		} else {
-			// MAXIMIZAR pela caixa
-			if (caixa.contains(evento.target)) {
-				dialogo.show();
-				caixa.classList.add("caixa_ativo");
 			}
 		}
 	});
 
+	caixa.addEventListener("click", () => {
+		if (telaEstaPorCima(dialogo)) {
+			// MINIMIZAR
+			dialogo.close();
+			caixa.classList.remove("caixa_ativo");
+			empilharTelaAberta([dialogo], -1);
+		} else {
+			// MAXIMIZAR
+			dialogo.show();
+			// remove outra caixa ativa
+			document.querySelector(".caixa_ativo")?.classList.remove("caixa_ativo");
+			caixa.classList.add("caixa_ativo");
+			empilharTelaAberta([dialogo, caixa]);
+		}
+	});
+
 	// MINIMIZAR, no botão
-	minimizar.addEventListener("click", () => {
+	minimizar.addEventListener("click", (evento) => {
+		evento.stopPropagation();
 		dialogo.close();
 		caixa.classList.remove("caixa_ativo");
+		const caixaAtual = empilharTelaAberta([dialogo], -1);
+		caixaAtual?.classList.add("caixa_ativo");
 	});
 	// FECHAR, no botão
-	fechar.addEventListener("click", () => {
+	fechar.addEventListener("click", (evento) => {
+		evento.stopPropagation();
 		dialogo.close();
 		caixa.style.setProperty("display", "none");
+		const caixaAtual = empilharTelaAberta([dialogo], -1);
+		caixaAtual?.classList.add("caixa_ativo");
 	});
+}
+
+/** @type {Array<[HTMLDialogElement, HTMLElement]>} */
+let telasAbertas = [];
+
+/**
+ * @param {[HTMLDialogElement, HTMLElement | undefined]?} tela
+ * @param {number} [z=1] acima `1`, ou remover `-1`
+ * @returns {HTMLElement | undefined} caixaAtiva
+ */
+function empilharTelaAberta(conjunto, z = 1) {
+	if (conjunto === null) {
+		telasAbertas.length = 0;
+		return;
+	}
+	const [tela, caixa] = conjunto;
+	if (z === 1) {
+		telasAbertas = telasAbertas.reduce((telas, [telaAberta, caixaAtual], index) => {
+			// reordena zIndex
+			if (!telaAberta.isEqualNode(tela)) {
+				telaAberta.style.setProperty("z-index", index + 1);
+				telas.push([telaAberta, caixaAtual]);
+			}
+			return telas;
+		}, []);
+
+		tela.style.setProperty("z-index", telasAbertas.length + 1);
+		telasAbertas.push([tela, caixa]);
+	} else {
+		telasAbertas = telasAbertas.reduce((telas, [telaAberta, caixaAtual]) => {
+			if (!telaAberta.isEqualNode(tela)) telas.push([telaAberta, caixaAtual]);
+			return telas;
+		}, []);
+		// retorna a caixa da tela que ficou por cima
+		const caixaAtiva = telasAbertas[telasAbertas.length - 1];
+		return caixaAtiva && caixaAtiva[1];
+	}
+}
+
+/** @param {HTMLDialogElement} tela  */
+function telaEstaPorCima(tela) {
+	const telaPorCima = telasAbertas[telasAbertas.length - 1];
+	return !!telaPorCima && telaPorCima[0].isEqualNode(tela);
 }
 
 /**
@@ -159,7 +248,7 @@ function novaTela(tela) {
  */
 function novaCaixaDePrograma(icone) {
 	const caixa = document.createElement("div");
-	caixa.classList.add("caixa", "programas__item", "caixa_ativo"); // por padrão é ativo quando criado
+	caixa.classList.add("caixa", "programas__item");
 	/** @type {Element} */
 	const caixaIcone = icone.cloneNode(true);
 	caixaIcone.classList.remove("item__icone");
@@ -167,4 +256,11 @@ function novaCaixaDePrograma(icone) {
 	caixa.appendChild(caixaIcone);
 
 	return caixa;
+}
+
+/** @param {Diretorios} telas  */
+function definirTelas(telas) {
+	for (const [id, criarConteudo] of Object.entries(telas)) {
+		novaTela({ botaoSeletor: "#" + id, conteudo: criarConteudo() });
+	}
 }

@@ -107,6 +107,13 @@ code {
 	border-bottom: 1px solid rgb(255, 255, 255);
 }
 
+.principal__programas {
+	/* TODO: adicionar scroll */
+	display: flex;
+	justify-content: flex-start;
+	column-gap: 0.5rem;
+}
+
 .programas {
 	display: inline-flex;
 	flex: 1;
