@@ -9,7 +9,7 @@
 const DIRETORIOS = {
 	lixeira: async () => {
 		const diretorio = "lixeira";
-		const caminho = `/assets/data/${diretorio}`;
+		const caminho = `assets/data/${diretorio}`;
 		/** @type {import("./src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
@@ -18,7 +18,7 @@ const DIRETORIOS = {
 	},
 	computador: async () => {
 		const diretorio = "meu_computador";
-		const caminho = `/assets/data/${diretorio}`;
+		const caminho = `assets/data/${diretorio}`;
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
 		const conteudo = null;
@@ -26,7 +26,7 @@ const DIRETORIOS = {
 	},
 	documentos: async () => {
 		const diretorio = "meus_documentos";
-		const caminho = `/assets/data/${diretorio}`;
+		const caminho = `assets/data/${diretorio}`;
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
 		const conteudo = criarConteudo(dados.arquivos, caminho);
