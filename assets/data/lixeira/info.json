@@ -3,6 +3,10 @@
   "nome": "Lixeira",
   "itens": 2,
   "totalBytes": 4956,
-  "atualizadoEm": 1727133379857.253,
-  "criadoEm": 1726665396195.57
+  "atualizadoEm": 1727370703568.159,
+  "criadoEm": 1726665396195.57,
+  "arquivos": [
+    "caracteristicas_interpessoais.txt",
+    "será que eu sou só um.txt"
+  ]
 }

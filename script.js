@@ -8,32 +8,32 @@
 /** @type {Diretorios} */
 const DIRETORIOS = {
 	lixeira: async () => {
-		const caminho = "lixeira";
-		const dados = await fetch(`/assets/data/${caminho}/info.json`).then((resposta) => resposta.json());
-		const info = criarInfo(dados, caminho);
-		const conteudo = document.createElement("div");
-		conteudo.textContent =
-			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
+		const diretorio = "lixeira";
+		const caminho = `/assets/data/${diretorio}`;
+		/** @type {import("./src/index").Info} */
+		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
+		const info = criarInfo(dados, diretorio);
+		const conteudo = criarConteudo(dados.arquivos, caminho);
 		return [conteudo, info];
 	},
 	computador: async () => {
-		const caminho = "meu_computador";
-		const dados = await fetch(`/assets/data/${caminho}/info.json`).then((resposta) => resposta.json());
-		const info = criarInfo(dados, caminho);
+		const diretorio = "meu_computador";
+		const caminho = `/assets/data/${diretorio}`;
+		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
+		const info = criarInfo(dados, diretorio);
 		const conteudo = null;
 		return [conteudo, info];
 	},
 	documentos: async () => {
-		const caminho = "meus_documentos";
-		const dados = await fetch(`/assets/data/${caminho}/info.json`).then((resposta) => resposta.json());
-		const info = criarInfo(dados, caminho);
-		const conteudo = document.createElement("div");
-		conteudo.textContent =
-			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
+		const diretorio = "meus_documentos";
+		const caminho = `/assets/data/${diretorio}`;
+		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
+		const info = criarInfo(dados, diretorio);
+		const conteudo = criarConteudo(dados.arquivos, caminho);
 		return [conteudo, info];
 	},
 	navegador: async () => {
-		const caminho = "internet_explorer";
+		const diretorio = "internet_explorer";
 		const info = null;
 		const conteudo = document.createElement("div");
 		conteudo.textContent =
@@ -46,6 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	definirBackground(".pagina__conteudo");
 	definirRelogio(".frequente__hora");
 	definirTelas(DIRETORIOS);
+	console.log(Object.keys(lucide), "ok");
+	lucide.createIcons({
+		attrs: {
+			class: ["item__icone"],
+		},
+		nameAttr: "data-lucide",
+	});
 });
 
 /**
@@ -141,14 +148,12 @@ function novaTela({ botaoSeletor, corpo }) {
 
 	const [conteudo, info] = corpo;
 	if (conteudo) {
-		conteudo.classList.add("conteudo", "dialogo__conteudo");
 		if (info) conteudo.style.paddingRight = "0.5rem";
 		corpoElt.appendChild(conteudo);
 	} else {
 		dialogo.style.width = "max-content";
 	}
 	if (info) {
-		info.classList.add("dialogo__info");
 		if (conteudo) info.style.paddingLeft = "0.5rem";
 		corpoElt.appendChild(info);
 	}
@@ -301,12 +306,12 @@ async function definirTelas(telas) {
 
 /**
  * @param {import("./src/index").Info} info
- * @param {string} caminho
+ * @param {string} diretorio
  */
-function criarInfo(info, caminho) {
+function criarInfo(info, diretorio) {
 	const container = document.createElement("div");
 	const titulo = document.createElement("code");
-	titulo.textContent = caminho;
+	titulo.textContent = diretorio;
 	container.appendChild(titulo);
 	const subTitulo = document.createElement("h3");
 	subTitulo.textContent = `${info.itens} ${info.itens !== 1 ? "itens" : "item"}, totalizando ${bytesEmKB(
@@ -334,6 +339,7 @@ function criarInfo(info, caminho) {
 	metadados.appendChild(criado);
 
 	container.appendChild(metadados);
+	container.classList.add("dialogo__info");
 
 	return container;
 }
@@ -348,4 +354,29 @@ function bytesEmKB(bytes) {
 	});
 	const bytesFormatado = kbFormatador.format(bytes);
 	return bytesFormatado.slice(0, bytesFormatado.indexOf("."));
+}
+
+/**
+ * @param {Array<string>} arquivos
+ * @param {string} caminhoRelativo
+ */
+function criarConteudo(arquivos, caminhoRelativo) {
+	const container = document.createElement("div");
+	container.classList.add("conteudo", "dialogo__conteudo");
+	for (const arquivo of arquivos) {
+		const item = document.createElement("a");
+		item.classList.add("item", "conteudo__item");
+		item.href = `${caminhoRelativo}/${arquivo}`;
+		item.target = "_blank";
+		// icone HTML
+		item.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`;
+		item.querySelector("svg")?.classList.add("item__icone");
+		const nome = document.createElement("span");
+		nome.textContent = arquivo;
+		nome.classList.add("item__nome");
+		item.title = arquivo;
+		item.appendChild(nome);
+		container.appendChild(item);
+	}
+	return container;
 }

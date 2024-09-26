@@ -63,6 +63,14 @@ code {
 		rgb(255, 255, 255) 1px 1px 0px 0px inset, rgb(128, 128, 128) -1px -1px 0px 0px inset;
 }
 
+a.conteudo__item {
+	color: inherit;
+}
+
+a.conteudo__item:focus-visible {
+	outline: none;
+}
+
 .item {
 	position: relative;
 	display: flex;
@@ -84,14 +92,28 @@ code {
 
 .item__nome {
 	position: absolute;
-	font-weight: 600;
-	text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+	max-width: 100%;
+	max-height: calc(((1rem * 1.2) * 2) + 0.5rem);
+	line-height: 1.2;
+	padding-top: 0.25rem;
+	padding-bottom: 0.25rem;
 	top: 100%;
-	padding-top: 0.5rem;
-	padding-bottom: 0.5rem;
-	user-select: none;
-	cursor: default;
 	border-radius: 0.5rem;
+	text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+	cursor: default;
+	user-select: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+	/* word-break: break-all; */
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.item__nome_desktop {
+	font-weight: 600;
+	max-width: 120%;
 }
 
 .principal__rodape {
@@ -264,7 +286,7 @@ code {
 
 .dialogo__info {
 	display: none;
-	min-width: 6rem;
+	min-width: 12rem;
 	max-width: 16rem;
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
@@ -290,6 +312,7 @@ code {
 	background: rgb(224, 224, 224);
 	padding: 0.25rem;
 	border-radius: 0.3rem;
+	margin-top: 1rem;
 }
 
 .dialogo:hover .info__metadados {

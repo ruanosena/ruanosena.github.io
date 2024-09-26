@@ -18,6 +18,7 @@ run();
  * @property {number?} totalBytes
  * @property {number?} atualizadoEm
  * @property {number?} criadoEm
+ * @property {Array<string>} arquivos
  */
 
 /** @typedef {"lixeira" | "meu_computador" | "meus_documentos" | "internet_explorer"} Id */
@@ -47,10 +48,10 @@ function getInfo(identificador, checarArquivos = true) {
 	info.$schema = info.$schema || path.join("..", jsonSchema);
 	info.nome = info.nome || capitalizarId(identificador);
 
-	const arquivos = fs.readdirSync(caminho).filter((arquivo) => ![".gitkeep", "info.json"].includes(arquivo));
-	info.itens = arquivos.length;
-	if (arquivos.length) {
-		const arquivosPropriedades = arquivos.map((arquivo) => fs.statSync(path.join(caminho, arquivo)));
+	info.arquivos = fs.readdirSync(caminho).filter((arquivo) => ![".gitkeep", "info.json"].includes(arquivo));
+	info.itens = info.arquivos.length;
+	if (info.arquivos.length) {
+		const arquivosPropriedades = info.arquivos.map((arquivo) => fs.statSync(path.join(caminho, arquivo)));
 
 		// Não conta o '.size' do arquivo 'info.json', ao invés, leva em conta o diretório.
 		info.totalBytes = arquivosPropriedades.reduce((soma, { size }) => {
