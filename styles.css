@@ -45,7 +45,7 @@ code {
 	padding: 1rem;
 	background-repeat: no-repeat;
 	background-position-x: 50%;
-	background-position-y: calc(50% - 2.6rem / 2);
+	background-position-y: 100%;
 }
 
 .conteudo {
@@ -163,12 +163,12 @@ a.conteudo__item:focus-visible {
 	margin-right: 0.25rem;
 }
 
-.fixo__menu {
+.fixo__botao {
 	background-color: transparent;
 	font-size: 1rem;
 }
 
-.fixo__menu,
+.fixo__botao,
 .frequente__hora,
 .programas__item {
 	display: flex;
@@ -179,9 +179,40 @@ a.conteudo__item:focus-visible {
 	border: 1px solid rgb(128 128 128);
 }
 
-.fixo__menu:hover,
-.frequente__hora:hover {
+.fixo__botao:hover,
+.frequente__hora:hover,
+.fixo__botao[data-aberto="true"] {
 	background-color: rgb(224 224 224);
+}
+
+.fixo {
+	position: relative;
+}
+
+.fixo__menu {
+	position: absolute;
+	bottom: calc(100% + 0.2rem);
+	left: 0;
+	min-width: 6rem;
+}
+
+.menu {
+	background: rgb(192, 192, 192);
+	border-top: 1.5px solid rgb(255, 255, 255);
+	border-left: 1px solid rgb(128 128 128);
+	border-bottom: 1.5px solid rgb(255, 255, 255);
+	border-right: 1px solid rgb(128 128 128);
+	box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+		rgb(255, 255, 255) 0px 1px 0px 0px inset;
+}
+
+.menu__item {
+	display: flex;
+	align-items: center;
+	height: 2.1rem;
+	font-weight: 500;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
 }
 
 .dialogo {
@@ -357,6 +388,10 @@ a.conteudo__item:focus-visible {
 
 	.dialogo__info {
 		display: block;
+	}
+
+	.pagina__conteudo {
+		background-position: center;
 	}
 }
 

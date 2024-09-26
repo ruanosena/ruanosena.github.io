@@ -46,13 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	definirBackground(".pagina__conteudo");
 	definirRelogio(".frequente__hora");
 	definirTelas(DIRETORIOS);
-	console.log(Object.keys(lucide), "ok");
-	lucide.createIcons({
-		attrs: {
-			class: ["item__icone"],
-		},
-		nameAttr: "data-lucide",
-	});
+	definirMenu();
 });
 
 /**
@@ -379,4 +373,13 @@ function criarConteudo(arquivos, caminhoRelativo) {
 		container.appendChild(item);
 	}
 	return container;
+}
+
+function definirMenu() {
+	/** @type {HTMLButtonElement} */
+	const botao = document.querySelector(".fixo__botao");
+	const menu = document.querySelector(".fixo__menu");
+	botao.addEventListener("click", () => {
+		botao.dataset["aberto"] = !menu.toggleAttribute("hidden");
+	});
 }
