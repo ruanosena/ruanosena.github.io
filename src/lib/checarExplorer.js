@@ -6,7 +6,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const __public = path.join(__dirname, "..", "..", "assets", "data");
 const destino = path.join(__public, "internet_explorer");
 
-/** @param {Array<RepoLink>} links  */
+/** @param {Array<Link>} links  */
 function gravar(links) {
 	fs.writeFileSync(path.join(destino, "lista_de_sites.json"), JSON.stringify(links, null, 2));
 }
@@ -25,7 +25,7 @@ function gravar(links) {
  */
 
 /**
- * @typedef {Object} RepoLink
+ * @typedef {Object} Link
  * @property {string} nome
  * @property {string} url
  * @property {number} criadoEm
@@ -34,13 +34,13 @@ function gravar(links) {
 /**
  * @param {string?} [usuario=""]
  * @param {boolean?} [checarGitHubPages=false]
- * @returns {Promise<Array<RepoLink>>}
+ * @returns {Promise<Array<Link>>}
  */
 async function fetchPaginasDeRepositoriosDoGithub(usuario = "", checarGitHubPages = false) {
 	usuario = usuario || obterNomeDeUsuario();
 	if (!usuario) return console.error(new Error("Não foi informado um nome de usuário no GitHub"));
 
-	/** @type {Array<RepoLink>} */
+	/** @type {Array<Link>} */
 	const links = [];
 
 	for (let pagina = 1, itensPorPagina = 20; ; pagina++) {

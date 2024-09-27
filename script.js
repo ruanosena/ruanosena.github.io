@@ -23,13 +23,16 @@ const DIRETORIOS = {
 		const caminho = `assets/data/${diretorio}`;
 		/** @type {import("./src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
-		const info = criarInfo(dados, diretorio, await criarMetadadosDePc(`${caminho}/${dados.arquivos[0]}`));
+		/** @type {import("./src/lib/checarComputador").Pc} */
+		const dadosPc = await fetch(`${caminho}/${dados.arquivos[0]}`).then((resposta) => resposta.json());
+		const info = criarInfo(dados, diretorio, criarMetadadosDePc(dadosPc));
 		const conteudo = null;
 		return [conteudo, info];
 	},
 	documentos: async () => {
 		const diretorio = "meus_documentos";
 		const caminho = `assets/data/${diretorio}`;
+		/** @type {import("./src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
 		const conteudo = criarConteudo(dados.arquivos, caminho);
@@ -37,12 +40,14 @@ const DIRETORIOS = {
 	},
 	navegador: async () => {
 		const diretorio = "internet_explorer";
+		const caminho = `assets/data/${diretorio}`;
+		/** @type {import("./src/index").Info} */
+		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = null;
-		// TODO: simular navegador ou pasta com links
-		const conteudo = document.createElement("div");
-		conteudo.textContent =
-			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
-		return Promise.resolve([conteudo, info]);
+		/** @type {Array<import("./src/lib/checarExplorer").Link>} */
+		const links = await fetch(`${caminho}/${dados.arquivos[0]}`).then((resposta) => resposta.json());
+		const conteudo = criarConteudoDoNavegador(links);
+		return [conteudo, info];
 	},
 };
 
@@ -152,9 +157,10 @@ function novaTela({ botaoSeletor, corpo }) {
 		dialogo.style.width = "max-content";
 	}
 	if (info) {
+		corpoElt.classList.add("corpo_container");
 		if (conteudo) info.style.paddingLeft = "0.5rem";
 		corpoElt.appendChild(info);
-	}
+	} // sem info não é adicionado padding do container, só pro conteudo (caso do navegador)
 
 	dialogo.appendChild(corpoElt);
 	document.body.appendChild(dialogo);
@@ -343,10 +349,8 @@ function criarInfo(info, diretorio, metadadosAdicionais) {
 	return container;
 }
 
-/** @param {string} urlDados */
-async function criarMetadadosDePc(urlDados) {
-	/** @type {import("./src/lib/checarComputador").Pc} */
-	const dados = await fetch(urlDados).then((resposta) => resposta.json());
+/** @param {import("./src/lib/checarComputador").Pc} dados */
+function criarMetadadosDePc(dados) {
 	const metadados = document.createElement("div");
 	metadados.classList.add("info__metadados");
 	const sO = document.createElement("div");
@@ -434,6 +438,54 @@ function criarConteudo(arquivos, caminhoRelativo) {
 		container.appendChild(item);
 	}
 	return container;
+}
+
+/** @param {Array<import("./src/lib/checarExplorer").Link>} links  */
+function criarConteudoDoNavegador(links) {
+	links = links.filter(({ url }) => url !== window.location.origin);
+
+	const navegador = document.createElement("div");
+	navegador.classList.add("navegador", "dialogo__navegador");
+
+	const navegadorCabecalho = document.createElement("div");
+	navegadorCabecalho.classList.add("cabecalho", "navegador__cabecalho");
+	navegador.appendChild(navegadorCabecalho);
+
+	const menuSites = document.createElement("select");
+	menuSites.classList.add("menu", "cabecalho__menu");
+	navegadorCabecalho.appendChild(menuSites);
+
+	for (const link of links) {
+		const linkOpt = document.createElement("option");
+		linkOpt.value = link.nome;
+		linkOpt.textContent = link.url;
+		linkOpt.title = new Date(link.criadoEm).toLocaleDateString();
+		menuSites.appendChild(linkOpt);
+	}
+
+	const navegadorContainer = document.createElement("iframe");
+	navegadorContainer.classList.add("container", "navegador__container");
+
+	navegador.appendChild(navegadorContainer);
+
+	let linkAtual = links[0].url;
+	navegadorContainer.src = linkAtual;
+	navegadorContainer.title = links[0].nome;
+
+	/** @type {Object<string, string>} */
+	const linksMap = links.reduce((map, { nome, url }) => {
+		map[nome] = url;
+		return map;
+	}, {});
+
+	menuSites.addEventListener("change", (evento) => {
+		if ((linkAtual = linksMap[evento.target.value])) {
+			navegadorContainer.src = linkAtual;
+			navegadorContainer.title = evento.target.value;
+		}
+	});
+
+	return navegador;
 }
 
 function definirMenu() {
