@@ -130,7 +130,6 @@ a.conteudo__item:focus-visible {
 }
 
 .principal__programas {
-	/* TODO: adicionar scroll */
 	display: flex;
 	justify-content: flex-start;
 	column-gap: 0.5rem;
@@ -145,7 +144,6 @@ a.conteudo__item:focus-visible {
 }
 
 .programas__item {
-	/* flex: 1; */
 	white-space: nowrap;
 	max-width: 10rem;
 }
@@ -354,6 +352,9 @@ a.conteudo__item:focus-visible {
 .info__metadados div {
 	font-size: 0.9rem;
 	color: rgb(26, 26, 26);
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	text-align: end;
 }
 
 .info__metadados div + div {
@@ -365,6 +366,8 @@ a.conteudo__item:focus-visible {
 	text-align: left;
 	color: rgb(128, 128, 128);
 	font-size: 0.8rem;
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
 }
 
 @media (min-width: 480px) {

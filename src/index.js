@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import runLixeira from "./lib/checarLixeira.js";
 import runExplorer from "./lib/checarExplorer.js";
 import runDocumentos from "./lib/checarDocumentos.js";
+import runComputador from "./lib/checarComputador.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const __public = path.join(__dirname, "..", "assets", "data");
@@ -113,6 +114,7 @@ function run(param = process.argv[2]) {
 		runLixeira(args["lixeira"]);
 		runExplorer(args["usuario"], args["ghpages"]);
 		runDocumentos(args["documentos"]);
+		runComputador();
 	} else if (param === "checar") {
 		checarInfoDeDiretorios("lixeira", "meu_computador", "meus_documentos", "internet_explorer");
 	} else {

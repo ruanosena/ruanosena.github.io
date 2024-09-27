@@ -10,9 +10,14 @@
     "criadoEm": 1726445287000
   },
   {
-    "nome": "pasta-pessoal",
-    "url": "https://ruanosena.github.io/pasta-pessoal/",
+    "nome": "ruanosena.github.io",
+    "url": "https://ruanosena.github.io/",
     "criadoEm": 1726096730000
+  },
+  {
+    "nome": "pessoal",
+    "url": "https://ruanosena.github.io/pessoal/",
+    "criadoEm": 1724595868000
   },
   {
     "nome": "peppa-pig-landing-page",

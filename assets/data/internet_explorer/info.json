@@ -2,8 +2,8 @@
   "$schema": "../data-info.schema.json",
   "nome": "Internet Explorer",
   "itens": 1,
-  "totalBytes": 4944,
-  "atualizadoEm": 1727370722120.4585,
+  "totalBytes": 5049,
+  "atualizadoEm": 1727395908347.88,
   "criadoEm": 1726665484227.4165,
   "arquivos": [
     "lista_de_sites.json"

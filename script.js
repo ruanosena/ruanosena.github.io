@@ -1,8 +1,10 @@
-/** @typedef {string} SeletorId */
+/** @typedef {"lixeira" | "computador" | "documentos", "navegador"} SeletorId */
+
 /**
  * @callback CriarCorpoDeTela
  * @returns {Promise<[HTMLElement | null, HTMLElement | null]>}
  */
+
 /** @typedef {Object<SeletorId, CriarCorpoDeTela>} Diretorios */
 
 /** @type {Diretorios} */
@@ -19,8 +21,9 @@ const DIRETORIOS = {
 	computador: async () => {
 		const diretorio = "meu_computador";
 		const caminho = `assets/data/${diretorio}`;
+		/** @type {import("./src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
-		const info = criarInfo(dados, diretorio);
+		const info = criarInfo(dados, diretorio, await criarMetadadosDePc(`${caminho}/${dados.arquivos[0]}`));
 		const conteudo = null;
 		return [conteudo, info];
 	},
@@ -35,6 +38,7 @@ const DIRETORIOS = {
 	navegador: async () => {
 		const diretorio = "internet_explorer";
 		const info = null;
+		// TODO: simular navegador ou pasta com links
 		const conteudo = document.createElement("div");
 		conteudo.textContent =
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque harum nam voluptatibus consectetur commodi. Voluptas molestiae odit nemo minus dolor. Nemo, inventore dicta? Est laborum perspiciatis officia explicabo molestias suscipit?";
@@ -301,21 +305,21 @@ async function definirTelas(telas) {
 /**
  * @param {import("./src/index").Info} info
  * @param {string} diretorio
+ *
  */
-function criarInfo(info, diretorio) {
+function criarInfo(info, diretorio, metadadosAdicionais) {
 	const container = document.createElement("div");
 	const titulo = document.createElement("code");
 	titulo.textContent = diretorio;
 	container.appendChild(titulo);
 	const subTitulo = document.createElement("h3");
-	subTitulo.textContent = `${info.itens} ${info.itens !== 1 ? "itens" : "item"}, totalizando ${bytesEmKB(
+	subTitulo.textContent = `${info.itens} ${info.itens !== 1 ? "itens" : "item"}, totalizando ${formatarBytes(
 		info.totalBytes
-	)} kB`;
+	)}`;
 	container.appendChild(subTitulo);
 
 	const metadados = document.createElement("div");
 	metadados.classList.add("info__metadados");
-
 	const modificado = document.createElement("div");
 	const modificadoLabel = document.createElement("span");
 	modificadoLabel.textContent = "Modificado";
@@ -333,21 +337,78 @@ function criarInfo(info, diretorio) {
 	metadados.appendChild(criado);
 
 	container.appendChild(metadados);
+	if (metadadosAdicionais) container.appendChild(metadadosAdicionais);
 	container.classList.add("dialogo__info");
 
 	return container;
 }
 
-/** @param {number} bytes  */
-function bytesEmKB(bytes) {
-	const kbFormatador = new Intl.NumberFormat("pt-BR", {
-		style: "unit",
-		unit: "byte",
-		unitDisplay: "short",
-		maximumFractionDigits: 1,
-	});
-	const bytesFormatado = kbFormatador.format(bytes);
-	return bytesFormatado.slice(0, bytesFormatado.indexOf("."));
+/** @param {string} urlDados */
+async function criarMetadadosDePc(urlDados) {
+	/** @type {import("./src/lib/checarComputador").Pc} */
+	const dados = await fetch(urlDados).then((resposta) => resposta.json());
+	const metadados = document.createElement("div");
+	metadados.classList.add("info__metadados");
+	const sO = document.createElement("div");
+	const sOLabel = document.createElement("span");
+	sOLabel.textContent = "Sistema operacional";
+	sOLabel.classList.add("info__label");
+	sO.appendChild(sOLabel);
+	sO.innerHTML += dados.tipo;
+	metadados.appendChild(sO);
+
+	const memoria = document.createElement("div");
+	const memoriaLabel = document.createElement("span");
+	memoriaLabel.classList.add("info__label");
+	memoriaLabel.textContent = "Memória";
+	memoria.appendChild(memoriaLabel);
+	memoria.innerHTML += formatarBytes(dados.memoria);
+	metadados.appendChild(memoria);
+
+	const cpu = document.createElement("div");
+	const cpuLabel = document.createElement("span");
+	cpuLabel.classList.add("info__label");
+	cpuLabel.textContent = "CPU";
+	cpu.appendChild(cpuLabel);
+	cpu.innerHTML += `${dados.quantidadeCpu}x ${dados.modeloCpu}`;
+	metadados.appendChild(cpu);
+
+	const kernel = document.createElement("div");
+	const kernelLabel = document.createElement("span");
+	kernelLabel.classList.add("info__label");
+	kernelLabel.textContent = "Kernel";
+	kernel.appendChild(kernelLabel);
+	kernel.innerHTML += dados.versao;
+	metadados.appendChild(kernel);
+
+	return metadados;
+}
+
+/**
+ * @param {number} bytes
+ * @param {number} [decimals=2]
+ * @link https://stackoverflow.com/a/18650828
+ */
+function formatarBytes(bytes, decimals = 2) {
+	if (!+bytes) return "0 Bytes";
+
+	const k = 1024;
+	const dm = decimals < 0 ? 0 : decimals;
+	const sizes = [
+		"Bytes",
+		"kB" /* kilobyte */,
+		"MB" /* megabyte */,
+		"GB" /* gigabyte */,
+		"TB" /* terabyte */,
+		"PB" /* petabyte */,
+		"EB" /* exabyte */,
+		"ZB" /* zettabyte */,
+		"YB" /* yottabyte */,
+	];
+
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+	return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
 /**
