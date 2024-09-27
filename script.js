@@ -442,7 +442,7 @@ function criarConteudo(arquivos, caminhoRelativo) {
 
 /** @param {Array<import("./src/lib/checarExplorer").Link>} links  */
 function criarConteudoDoNavegador(links) {
-	links = links.filter(({ url }) => url !== window.location.origin);
+	links = links.filter(({ url }) => new URL(url).origin !== window.location.origin);
 
 	const navegador = document.createElement("div");
 	navegador.classList.add("navegador", "dialogo__navegador");
