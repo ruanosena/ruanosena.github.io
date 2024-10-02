@@ -12,7 +12,7 @@ const DIRETORIOS = {
 	lixeira: async () => {
 		const diretorio = "lixeira";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
 		const conteudo = criarConteudo(dados.arquivos, caminho);
@@ -21,9 +21,9 @@ const DIRETORIOS = {
 	computador: async () => {
 		const diretorio = "meu_computador";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
-		/** @type {import("./src/lib/checarComputador").Pc} */
+		/** @type {import("../src/lib/checarComputador").Pc} */
 		const dadosPc = await fetch(`${caminho}/${dados.arquivos[0]}`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio, criarMetadadosDePc(dadosPc));
 		const conteudo = null;
@@ -32,7 +32,7 @@ const DIRETORIOS = {
 	documentos: async () => {
 		const diretorio = "meus_documentos";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
 		const conteudo = criarConteudo(dados.arquivos, caminho);
@@ -41,10 +41,10 @@ const DIRETORIOS = {
 	navegador: async () => {
 		const diretorio = "internet_explorer";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = null;
-		/** @type {Array<import("./src/lib/checarExplorer").Link>} */
+		/** @type {Array<import("../src/lib/checarExplorer").Link>} */
 		const links = await fetch(`${caminho}/${dados.arquivos[0]}`).then((resposta) => resposta.json());
 		const conteudo = criarConteudoDoNavegador(links);
 		return [conteudo, info];
@@ -309,7 +309,7 @@ async function definirTelas(telas) {
 }
 
 /**
- * @param {import("./src/index").Info} info
+ * @param {import("../src/index").Info} info
  * @param {string} diretorio
  *
  */
@@ -349,7 +349,7 @@ function criarInfo(info, diretorio, metadadosAdicionais) {
 	return container;
 }
 
-/** @param {import("./src/lib/checarComputador").Pc} dados */
+/** @param {import("../src/lib/checarComputador").Pc} dados */
 function criarMetadadosDePc(dados) {
 	const metadados = document.createElement("div");
 	metadados.classList.add("info__metadados");
@@ -440,7 +440,7 @@ function criarConteudo(arquivos, caminhoRelativo) {
 	return container;
 }
 
-/** @param {Array<import("./src/lib/checarExplorer").Link>} links  */
+/** @param {Array<import("../src/lib/checarExplorer").Link>} links  */
 function criarConteudoDoNavegador(links) {
 	links = links.filter(({ url }) => new URL(url).origin !== window.location.origin);
 
