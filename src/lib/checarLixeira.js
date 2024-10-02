@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const __public = path.join(__dirname, "..", "..", "assets", "data");
+const __public = path.join(__dirname, "..", "..", "build", "assets", "data");
 const destino = path.join(__public, "lixeira");
 
 async function limparDestino() {

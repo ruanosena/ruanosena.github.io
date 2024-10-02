@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import os from "node:os";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const __public = path.join(__dirname, "..", "..", "assets", "data");
+const __public = path.join(__dirname, "..", "..", "build", "assets", "data");
 const destino = path.join(__public, "meu_computador");
 
 /** @param {Pc} dados  */

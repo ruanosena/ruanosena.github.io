@@ -7,7 +7,7 @@
   "homepage": "https://ruanosena.github.io",
   "scripts": {
     "predeploy": "node . build && node . checar",
-    "deploy": "gh-pages --branch main --dotfiles --dist . --src **/!node_modules",
+    "deploy": "gh-pages --branch main --dotfiles --dist build",
     "prestart": "node . build",
     "start": "node . checar",
     "test": "echo \"Error: no test specified\" && exit 1"
