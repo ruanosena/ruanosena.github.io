@@ -1,11 +1,12 @@
 {
   "$schema": "../data-info.schema.json",
   "nome": "Lixeira",
-  "itens": 2,
-  "totalBytes": 4956,
-  "atualizadoEm": 1727888823402.059,
+  "itens": 3,
+  "totalBytes": 5542,
+  "atualizadoEm": 1727991772947.3987,
   "criadoEm": 1726665396195.57,
   "arquivos": [
+    "aprendendo_prisma.txt",
     "caracteristicas_interpessoais.txt",
     "será que eu sou só um.txt"
   ]

@@ -1,6 +1,6 @@
 {
   "tipo": "Linux",
-  "memoria": 8217886720,
+  "memoria": 8217882624,
   "modeloCpu": "Intel(R) Core(TM) i5-4210U CPU @ 1.70GHz",
   "quantidadeCpu": 4,
   "versao": "#40-Ubuntu SMP PREEMPT_DYNAMIC Tue Nov 14 14:18:00 UTC 2023"
