@@ -1,5 +1,20 @@
 [
   {
+    "nome": "hobby",
+    "url": "https://ruanosena.github.io/hobby/",
+    "criadoEm": 1729018812000
+  },
+  {
+    "nome": "passar-ali",
+    "url": "https://passar-ali.vercel.app",
+    "criadoEm": 1728047363000
+  },
+  {
+    "nome": "geringonca",
+    "url": "https://ruanosena.github.io/geringonca/",
+    "criadoEm": 1727969402000
+  },
+  {
     "nome": "rido",
     "url": "https://rido.vercel.app",
     "criadoEm": 1726678413000
@@ -28,11 +43,6 @@
     "nome": "peppa-pig-landing-page",
     "url": "https://peppa-pig-six.vercel.app",
     "criadoEm": 1723730991000
-  },
-  {
-    "nome": "nextjs-dashboard",
-    "url": "https://nextjs-dashboard-rosy-phi.vercel.app",
-    "criadoEm": 1709390771000
   },
   {
     "nome": "07-ignite-call",
