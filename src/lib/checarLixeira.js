@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import os from "node:os";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const __public = path.join(__dirname, "..", "..", "assets", "data");
+const __public = path.join(__dirname, "..", "..", "build", "assets", "data");
 const destino = path.join(__public, "lixeira");
 
 async function limparDestino() {
@@ -44,21 +45,23 @@ function ler(caminhoAbsoluto) {
 function filtrarArquivos(arquivos) {
 	const extensoesValidas = [".txt", ".md"];
 	arquivos = arquivos.filter((arq) => extensoesValidas.some((ext) => arq.endsWith(ext)));
-	// desconsidera arquivos como LICENSE.txt
-	const nomeInvalido = /^[A-Z]+\./;
+	// desconsidera arquivos como LICENSE.txt | arquivo.LICENSE.txt
+	const nomeInvalido = /(^|\.)[A-Z]+\./;
 	arquivos = arquivos.filter((arq) => !nomeInvalido.test(arq));
 	return arquivos;
 }
 
 function getCaminhoAbsoluto() {
+	// /home/$user
+	const home = os.homedir();
 	switch (process.platform) {
-		// TODO: add darwin, win32
+		// TODO: add darwin
+		case "win32":
+			// windows
+			return path.join(home, "..", "..", "$Recycle.Bin");
 		default:
 			// linux
-			const cwd = process.cwd().split("/");
-			// /home/$user
-			const base = cwd.slice(0, 3).join("/");
-			return path.join(base, ".local", "share", "Trash", "files");
+			return path.join(home, ".local", "share", "Trash", "files");
 	}
 }
 

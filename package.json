@@ -4,7 +4,10 @@
   "description": "site de programador",
   "type": "module",
   "main": "src/index.js",
+  "homepage": "https://ruanosena.github.io",
   "scripts": {
+    "predeploy": "node . build && node . checar",
+    "deploy": "gh-pages --branch main --dotfiles --dist build",
     "prestart": "node . build",
     "start": "node . checar",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,5 +16,8 @@
     "portfolio"
   ],
   "author": "ruanosena",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "gh-pages": "^6.1.1"
+  }
 }

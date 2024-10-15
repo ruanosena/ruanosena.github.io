@@ -12,7 +12,7 @@ const DIRETORIOS = {
 	lixeira: async () => {
 		const diretorio = "lixeira";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
 		const conteudo = criarConteudo(dados.arquivos, caminho);
@@ -21,9 +21,9 @@ const DIRETORIOS = {
 	computador: async () => {
 		const diretorio = "meu_computador";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
-		/** @type {import("./src/lib/checarComputador").Pc} */
+		/** @type {import("../src/lib/checarComputador").Pc} */
 		const dadosPc = await fetch(`${caminho}/${dados.arquivos[0]}`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio, criarMetadadosDePc(dadosPc));
 		const conteudo = null;
@@ -32,7 +32,7 @@ const DIRETORIOS = {
 	documentos: async () => {
 		const diretorio = "meus_documentos";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = criarInfo(dados, diretorio);
 		const conteudo = criarConteudo(dados.arquivos, caminho);
@@ -41,15 +41,33 @@ const DIRETORIOS = {
 	navegador: async () => {
 		const diretorio = "internet_explorer";
 		const caminho = `assets/data/${diretorio}`;
-		/** @type {import("./src/index").Info} */
+		/** @type {import("../src/index").Info} */
 		const dados = await fetch(`${caminho}/info.json`).then((resposta) => resposta.json());
 		const info = null;
-		/** @type {Array<import("./src/lib/checarExplorer").Link>} */
+		/** @type {Array<import("../src/lib/checarExplorer").Link>} */
 		const links = await fetch(`${caminho}/${dados.arquivos[0]}`).then((resposta) => resposta.json());
 		const conteudo = criarConteudoDoNavegador(links);
 		return [conteudo, info];
 	},
 };
+
+/** @type {Object<string, string>} */
+const ICONES = {
+	".pdf": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`,
+	".txt": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>`,
+	// default
+	".\\[a-z]+": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-digit"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><rect width="4" height="6" x="2" y="12" rx="2"/><path d="M10 12h2v6"/><path d="M10 18h4"/></svg>`,
+};
+
+/**
+ * @param {string} arquivo
+ * @returns {string}
+ */
+function obterIcone(arquivo) {
+	for (const extensao of Object.keys(ICONES)) {
+		if (new RegExp(`\\${extensao}$`).test(arquivo)) return ICONES[extensao];
+	}
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 	definirBackground(".pagina__conteudo");
@@ -309,7 +327,7 @@ async function definirTelas(telas) {
 }
 
 /**
- * @param {import("./src/index").Info} info
+ * @param {import("../src/index").Info} info
  * @param {string} diretorio
  *
  */
@@ -349,7 +367,7 @@ function criarInfo(info, diretorio, metadadosAdicionais) {
 	return container;
 }
 
-/** @param {import("./src/lib/checarComputador").Pc} dados */
+/** @param {import("../src/lib/checarComputador").Pc} dados */
 function criarMetadadosDePc(dados) {
 	const metadados = document.createElement("div");
 	metadados.classList.add("info__metadados");
@@ -427,8 +445,8 @@ function criarConteudo(arquivos, caminhoRelativo) {
 		item.classList.add("item", "conteudo__item");
 		item.href = `${caminhoRelativo}/${arquivo}`;
 		item.target = "_blank";
-		// icone HTML
-		item.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`;
+		// icone HTML svg
+		item.innerHTML = obterIcone(arquivo);
 		item.querySelector("svg")?.classList.add("item__icone");
 		const nome = document.createElement("span");
 		nome.textContent = arquivo;
@@ -440,9 +458,13 @@ function criarConteudo(arquivos, caminhoRelativo) {
 	return container;
 }
 
-/** @param {Array<import("./src/lib/checarExplorer").Link>} links  */
+/** @param {Array<import("../src/lib/checarExplorer").Link>} links  */
 function criarConteudoDoNavegador(links) {
-	links = links.filter(({ url }) => new URL(url).origin !== window.location.origin);
+	links = links.filter(({ url }) => {
+		const urlObject = new URL(url);
+		if (urlObject.pathname === "/") return urlObject.origin !== window.location.origin;
+		return true;
+	});
 
 	const navegador = document.createElement("div");
 	navegador.classList.add("navegador", "dialogo__navegador");

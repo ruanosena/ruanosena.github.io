@@ -7,7 +7,7 @@ import runDocumentos from "./lib/checarDocumentos.js";
 import runComputador from "./lib/checarComputador.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const __public = path.join(__dirname, "..", "assets", "data");
+const __public = path.join(__dirname, "..", "build", "assets", "data");
 
 run();
 

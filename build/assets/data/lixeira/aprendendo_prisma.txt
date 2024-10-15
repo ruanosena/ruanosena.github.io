@@ -1,0 +1,16 @@
+> vercel env pull .env
+cria váriaveis de ambiente no projeto linkado com vercel link (local e no portal)
+> npm i -D prisma
+instala o orm de db
+depois de escrito o schema
+> npx prisma db push
+gera as tabelas e disponibiliza o client (studio)
+> npx prisma studio
+abre no navegador um client sgbd para criar novas entradas
+> npm i @prisma/client
+instala o client para comunicar com o backend
+> npx prisma generate
+atualiza o client (necessário sempre que alterar um schema do orm)
+
+- para usar o client, é instanciado uma vez somente no objeto global, quando não está em production;
+
