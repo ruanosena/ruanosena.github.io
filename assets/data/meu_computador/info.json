@@ -2,8 +2,8 @@
   "nome": "Computador",
   "$schema": "../data-info.schema.json",
   "itens": 1,
-  "totalBytes": 121992,
-  "atualizadoEm": 1727991772943.398,
+  "totalBytes": 122210,
+  "atualizadoEm": 1729036099093.269,
   "criadoEm": 1726665404758.7769,
   "arquivos": [
     "pc.json"
